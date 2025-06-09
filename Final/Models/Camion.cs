@@ -6,7 +6,7 @@ namespace Final.Models
     public class Camion : Vehiculo
     {
         [Required]
-        public string carga { get; set; }
+        public string Carga { get; set; }
         [Required]
         public string Llanta { get; set; }
     }

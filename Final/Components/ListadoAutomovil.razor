@@ -1,0 +1,43 @@
+﻿@inject Blazored.LocalStorage.ISyncLocalStorageService localStorage
+@inject HttpClient Http
+
+@using Models
+
+@if (automoviles == null)
+{
+	<p><em>Cargando...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Npuerta</th>
+				<th>Combustible</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var Automovil in automoviles)
+			{
+				<tr>
+					<td>@Automovil.Npuerta</td>
+					<td>@Automovil.Combustible</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+
+@code {
+	private List<Automovil> automoviles = new List<Automovil>();
+	protected override async Task OnInitializedAsync()
+	{
+		var automovilGuardado = localStorage.GetItem<List<Automovil>>("automoviles");
+
+		if (automovilGuardado != null)
+		{
+			automoviles = automovilGuardado;
+		}
+	}
+}
