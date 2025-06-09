@@ -1,7 +1,161 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@using Models
+@using Components
 
-<h1>Hello, world!</h1>
+@using System.ComponentModel.DataAnnotations
+@using Blazored.LocalStorage
+@inject ISyncLocalStorageService localStorage
+@inject NavigationManager NavigationManager
 
-Welcome to your new app.
+<h3>Formulario para ingresar vehículo</h3>
+
+<div class="row mt-3">
+    <div class="col col-6">
+        <label for="tipoVehiculo">Tipo de Vehículo</label>
+        <InputSelect id="tipoVehiculo" class="form-select" @bind-Value="TipoSeleccionado">
+            <option value="Automovil">Automóvil</option>
+            <option value="Motocicleta">Motocicleta</option>
+            <option value="Camion">Camión</option>
+        </InputSelect>
+    </div>
+</div>
+
+@if (TipoSeleccionado == "Automovil")
+{
+    <EditForm Model="@automovil" OnValidSubmit="GuardarAutomovil">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row">
+            <div class="col">
+                <label>Chasis</label>
+                <InputNumber class="form-control" @bind-Value="automovil.NumChasis" />
+            </div>
+            <div class="col">
+                <label>Marca</label>
+                <InputText class="form-control" @bind-Value="automovil.Marca" />
+            </div>
+            <div class="col">
+                <label>Año</label>
+                <InputNumber class="form-control" @bind-Value="automovil.AnioFabricacion" />
+            </div>
+            <div class="col">
+                <label>Puertas</label>
+                <InputNumber class="form-control" @bind-Value="automovil.NumPuertas" />
+            </div>
+            <div class="col">
+                <label>Combustible</label>
+                <InputText class="form-control" @bind-Value="automovil.TipoCombustible" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+    </EditForm>
+}
+
+@if (TipoSeleccionado == "Motocicleta")
+{
+    <EditForm Model="@motocicleta" OnValidSubmit="GuardarMotocicleta">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row">
+            <div class="col">
+                <label>Chasis</label>
+                <InputNumber class="form-control" @bind-Value="motocicleta.NumChasis" />
+            </div>
+            <div class="col">
+                <label>Marca</label>
+                <InputText class="form-control" @bind-Value="motocicleta.Marca" />
+            </div>
+            <div class="col">
+                <label>Año</label>
+                <InputNumber class="form-control" @bind-Value="motocicleta.AnioFabricacion" />
+            </div>
+            <div class="col">
+                <label>Cilindrada</label>
+                <InputNumber class="form-control" @bind-Value="motocicleta.Cilindrada" />
+            </div>
+            <div class="col">
+                <label>Tipo</label>
+                <InputText class="form-control" @bind-Value="motocicleta.Tipo" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+    </EditForm>
+}
+
+@if (TipoSeleccionado == "Camion")
+{
+    <EditForm Model="@camion" OnValidSubmit="GuardarCamion">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row">
+            <div class="col">
+                <label>Chasis</label>
+                <InputNumber class="form-control" @bind-Value="camion.NumChasis" />
+            </div>
+            <div class="col">
+                <label>Marca</label>
+                <InputText class="form-control" @bind-Value="camion.Marca" />
+            </div>
+            <div class="col">
+                <label>Año</label>
+                <InputNumber class="form-control" @bind-Value="camion.AnioFabricacion" />
+            </div>
+            <div class="col">
+                <label>Capacidad (ton)</label>
+                <InputNumber class="form-control" @bind-Value="camion.Capacidad" />
+            </div>
+            <div class="col">
+                <label>Llantas</label>
+                <InputNumber class="form-control" @bind-Value="camion.NumLlantas" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Guardar</button>
+    </EditForm>
+}
+
+@code {
+    private string TipoSeleccionado = "Automovil";
+
+
+    private Automovil automovil = new();
+    private Motocicleta motocicleta = new();
+    private Camion camion = new();
+
+    private void GuardarAutomovil()
+    {
+        var lista = localStorage.GetItem<List<Automovil>>("automoviles") ?? new();
+        lista.Add(automovil);
+        localStorage.SetItem("automoviles", lista);
+        NavigationManager.NavigateTo("/listado-automoviles");
+        var vehiculosGenerales = localStorage.GetItem<List<Vehiculos>>("archivo_vehiculos") ?? new();
+        vehiculosGenerales.Add(automovil); // o motocicleta / camion
+        localStorage.SetItem("archivo_vehiculos", vehiculosGenerales);
+
+    }
+
+    private void GuardarMotocicleta()
+    {
+        var lista = localStorage.GetItem<List<Motocicleta>>("motocicletas") ?? new();
+        lista.Add(motocicleta);
+        localStorage.SetItem("motocicletas", lista);
+        NavigationManager.NavigateTo("/listado-motocicletas");
+        var vehiculosGenerales = localStorage.GetItem<List<Vehiculos>>("archivo_vehiculos") ?? new();
+        vehiculosGenerales.Add(automovil); // o motocicleta / camion
+        localStorage.SetItem("archivo_vehiculos", vehiculosGenerales);
+
+    }
+
+    private void GuardarCamion()
+    {
+        var lista = localStorage.GetItem<List<Camion>>("camiones") ?? new();
+        lista.Add(camion);
+        localStorage.SetItem("camiones", lista);
+        NavigationManager.NavigateTo("/listado-camiones");
+        var vehiculosGenerales = localStorage.GetItem<List<Vehiculos>>("archivo_vehiculos") ?? new();
+        vehiculosGenerales.Add(automovil); // o motocicleta / camion
+        localStorage.SetItem("archivo_vehiculos", vehiculosGenerales);
+
+    }
+
+}

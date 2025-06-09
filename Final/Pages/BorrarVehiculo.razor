@@ -1,0 +1,60 @@
+﻿@page "/vehiculo-borrar/{id}"
+
+@using Models;
+@using Components;
+
+@inject Blazored.LocalStorage.ISyncLocalStorageService localStorage
+@inject NavigationManager NavigationManager
+
+<h3>Eliminando...</h3>
+
+@code {
+    [Parameter]
+    public string Chasis { get; set; }
+    protected override void OnInitialized()
+    {
+        var vehiculos = localStorage.GetItem<List<Vehiculo>>("vehiculos");
+        var camiones = localStorage.GetItem<List<Camion>>("camiones");
+        var motos = localStorage.GetItem<List<Motocicleta>>("motos");
+        var automoviles = localStorage.GetItem<List<Automovil>>("automoviles");
+
+        if (vehiculos != null)
+        {
+            var vehiculo = vehiculos.FirstOrDefault(a => a.Chasis == Chasis);
+            if (vehiculo != null)
+            {
+                vehiculos.Remove(vehiculo);
+                localStorage.SetItem("vehiculos", vehiculos);
+            }
+        }
+        if (camiones != null)
+        {
+            var camion = camiones.FirstOrDefault(a => a.Chasis == Chasis);
+            if (camion != null)
+            {
+                camiones.Remove(camion);
+                localStorage.SetItem("camiones", camiones);
+            }
+        }
+        if (motos != null)
+        {
+            var Motocicleta = motos.FirstOrDefault(a => a.Chasis == Chasis);
+            if (Motocicleta != null)
+            {
+                motos.Remove(Motocicleta);
+                localStorage.SetItem("motos", motos);
+            }
+        }
+        if (automoviles != null)
+        {
+            var automovil = automoviles.FirstOrDefault(a => a.Chasis == Chasis);
+            if (automovil != null)
+            {
+                automoviles.Remove(automovil);
+                localStorage.SetItem("automoviles", automoviles);
+            }
+        }
+        NavigationManager.NavigateTo("/listado-vehiculo");
+    }
+
+}
